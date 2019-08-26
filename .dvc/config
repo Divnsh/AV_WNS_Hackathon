@@ -1,0 +1,6 @@
+['remote "myremote"']
+url = s3://avwnshack/AV_WNS_Hackathon
+['remote "upstream"']
+url = s3://avwnshack/AV_WNS_Hackathon
+[core]
+remote = upstream
