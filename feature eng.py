@@ -89,22 +89,21 @@ def load_data():
     log = log.merge(item,on='item_id',how='inner')
     return train,log
     
-if __name__=='__main__':
-    train,log=load_data()
-    '''
-    log,X_train=baseline_model(train)    
-    test_df=pd.read_csv(r'./Data/test.csv')
-    with open(r'./Models/baseline_logistic.pkl','rb') as f:
-            X_train=pickle.load(f)
-    pred_df=predict_test_values(test_df,log,X_train)
-    pred_df.to_csv('./Submissions/baseline_predictions.csv',index=False)
-    #pca,arr=dimesionality_reduction(X_train.toarray())
-    #plot_reduced_dimension(arr,train['is_click'])
-    visualizer = ROCAUC(log)
-    visualizer.score(X_train,train['label'])
-    visualizer.poof()
-    feature_series=pd.Series(index=X_train.columns,data=X_train.values)
-    '''  
+train,log=load_data()
+'''
+log,X_train=baseline_model(train)    
+test_df=pd.read_csv(r'./Data/test.csv')
+with open(r'./Models/baseline_logistic.pkl','rb') as f:
+        X_train=pickle.load(f)
+pred_df=predict_test_values(test_df,log,X_train)
+pred_df.to_csv('./Submissions/baseline_predictions.csv',index=False)
+#pca,arr=dimesionality_reduction(X_train.toarray())
+#plot_reduced_dimension(arr,train['is_click'])
+visualizer = ROCAUC(log)
+visualizer.score(X_train,train['label'])
+visualizer.poof()
+feature_series=pd.Series(index=X_train.columns,data=X_train.values)
+'''  
 
 # Users split function
 #train=train[:10000]   
@@ -118,7 +117,7 @@ def users_split(k):
         u.append(users[i*int(len(users)/k):])
     return u
 
-userslist = users_split(5) 
+userslist = users_split(3) 
 
 # Checking for ads shown within 7 days
 
@@ -130,6 +129,7 @@ def check_dates(row,user_id):
     #print(is_ad)
     colnames = list(log.columns)
     colnames.remove('server_time')
+    colnames.remove('user_id')
     finlist = [list(is_ad.astype('int'))]
     for col in colnames:
         finlist.append(list(logdf[is_ad][col]))
@@ -184,6 +184,7 @@ fdf = reduce(lambda x,y: pd.concat([x,y],axis=0),result)
 fdf=fdf.reset_index(drop=True)
 
 cols=list(log.columns)
+cols.remove('user_id')
 cols[0] = 'n_trackings'
 
 for i,col in enumerate(cols):
